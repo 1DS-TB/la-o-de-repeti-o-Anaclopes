@@ -7,7 +7,7 @@ if numero > 0:
         nm *= i
         i+=1
 elif numero < 0:
-    print("INVÁLIDO")
+    print("INVALIDO")
     
 elif numero == 0:
     nm == 1
