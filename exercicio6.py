@@ -12,5 +12,5 @@ else:
         C = A + B
         A = B
         B = C
-    fibonnaci.append(A)
-    print(fibonnaci)
+fibonnaci.append(A)
+print(fibonnaci)
