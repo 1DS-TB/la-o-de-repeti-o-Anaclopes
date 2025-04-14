@@ -3,7 +3,7 @@ n = 1
 serie_harmonica = []
 soma = 0
 if divisor < 0:
-    print("Inválido")
+    print("INVALIDO")
 else:
     while n <= divisor:
         serie_harmonica.append(f"1/{n}")
