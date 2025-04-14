@@ -4,9 +4,12 @@ B = 1
 C = 1
 fibonnaci = []
 
-while C <= numero:
-    fibonnaci.append(C)
-    C = A + B
-    A = B
-    B = C
-print(fibonnaci)
+if numero < 1:
+    print("Inválido")
+else:
+    while C <= numero:
+        fibonnaci.append(A)
+        C = A + B
+        A = B
+        B = C
+    print(fibonnaci)
