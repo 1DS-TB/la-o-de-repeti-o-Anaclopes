@@ -1,22 +1,11 @@
-def perfeito(n):
-    soma = 0
-    for val in range(1, n):
-        if n % val == 0:
-            soma += val
+soma = 0
 
-    if soma == n:
-        return True
-    else:
-        return False
+for numero in range(1,10001):
 
-def exibe():
-    n = int(input('Exibir perfeitos até o número: '))
-    numeros_perfeitos = []
+    for i in range(1,numero):
+        if numero % i == 0:
+            soma += i
+    if soma == numero:
+        print(f"O número {numero} é perfeito")
 
-    for val in range(1, n + 1):
-        if (perfeito(val)):
-            numeros_perfeitos.append((val))
-    print(f"Os números perfeitos entre 1 e 1000 são: {numeros_perfeitos}")
-
-while True:
-    exibe()
+    soma -= soma
