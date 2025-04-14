@@ -5,7 +5,7 @@ C = 1
 fibonnaci = []
 
 if numero < 1:
-    print("Inválido")
+    print("INVALIDO")
 else:
     while C <= numero:
         fibonnaci.append(A)
