@@ -1,22 +1,40 @@
-def kaprekar(n):
-    quadrado = n ** 2
+num1 = int(input("Digite o primeiro intervalo: "))
+num2 = int(input("Digite o segundo intervalo: "))
 
-    quadrado_str = str(quadrado)
+if num1 <= 0 or num2 <= 0:
+    print("Inválido")
+else:
+    for i in range (num1, num2):
+        i2 = str(i**2)
+        tamanho = len(i2)
 
-    tamanho_d = len(str(n))
+        if i < 10:
+            if i == 9 or i == 1:
+                print(f"O número {i} é um número Kaprekar.")
 
-    parte_d = int(quadrado_str[-tamanho_d:]) if len(quadrado_str) > tamanho_d else 0
+        elif tamanho % 2 != 0 or i == 9 or i == 1:
+            metade = tamanho // 2
+            lDireita = tamanho - metade
+            lEsquerda = tamanho - lDireita
 
-    parte_e = int(quadrado_str[:-tamanho_d]) if len(quadrado_str) > tamanho_d else 0
+            direita = int(i2[-lDireita:])
+            esquerda = int(i2[:lEsquerda])
 
-    soma = parte_d + parte_e
+            if direita + esquerda == i:
+                print(f"O número {i} é um número Kaprekar.")
 
-    return soma == n
+        else:
 
-inicial = int(input("Informe o primeiro número do intervalo: "))
-final = int(input("Informe o último número do intervalo: "))
+            metade = tamanho // 2
+            lDireita = tamanho - metade
+            lEsquerda = tamanho - lDireita
 
-print(f"Os números de kaprekar entre o intevalo escolhido são: ")
-for numero in range (inicial, final +1):
-    if kaprekar(numero):
-        print(numero)
+            direita = int(i2[-lDireita:])
+            esquerda = int(i2[:lEsquerda])
+
+            if direita + esquerda == i:
+                print(f"O número {i} é um número Kaprekar.")
+
+        metade = 0
+        lDireita = 0
+        lEsquerda = 0
