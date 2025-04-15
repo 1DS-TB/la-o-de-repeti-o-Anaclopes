@@ -6,7 +6,7 @@ for i in range(1, num +1):
         divisor +=1
 
 if divisor == 2:
-    print(f"{num} é primo")
+    print(f"{num} eh primo")
 elif divisor <1:
     print("INVALIDO")
 else:
