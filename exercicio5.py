@@ -7,7 +7,5 @@ for i in range(1, num +1):
 
 if divisor == 2:
     print(f"{num} é primo")
-elif divisor <1:
+elif divisor <= 1:
     print("INVALIDO")
-else:
-    print(f"{num} não é primo")
