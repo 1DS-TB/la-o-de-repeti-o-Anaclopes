@@ -48,6 +48,11 @@ loop_persona = 0
 persona_vez = False
 loop_cpu = 0
 
+#pocao última chance
+reviver_persona = 0
+ultima_chacep = False
+reviver_cpu = 0
+ultima_chacec = False
 
 #-------------------------------------------------------------------------- Jogador x CPU ---------------------------------------------------------------------
 
@@ -67,7 +72,9 @@ else:
 while op != "2" and op != "3":
     print(f"\n========Turno {turno}========\n Seu HP: {hp_persona:.2f} | Oponente: {hp_cpu:.2f}\n")
     buff_a = input("Deseja adicionar algum Efeito de status?\n [1] Sim    [2] Não")
+    pocoes = input("Deseja usar alguma poção?\n [1] Sim    [2] Não")
     efeito = ["1","2","3"]
+    op_pocoes = ["1","2","3", "4"]
 
     if persona_vez:
         print("Você perdeu a vez por conta do loop infinito do inimigo")
@@ -81,6 +88,16 @@ while op != "2" and op != "3":
                 "1 - Buffer Overflow: A cada turno, o personagem sofre dano equivalente a 5% do HP máximo\n "
                 "2 - Loop infinito: O alvo perde a vez por 1 turno enquanto reinicia o sistema\n "
                 "3 - Tela Azul: Reduz a defesa para 0 por 2 turnos")
+        if pocoes == "1":
+            op_pocoes = input("\n Qual poção deseja usar?\n"
+                              "1- Poção da última chance\n"
+                              "2- Poção de fúria: aumenta o ataque em 30% em 3 turnos\n"
+                              "3- Poção Soro do Berserker – Dobra o dano, mas reduz defesa pela metade.\n"
+                              "4- Poção da Rocha – Aumenta a defesa em 50% por 2 turnos.")
+        if op_pocoes == "1" and hp_persona == 0:
+            ultima_chacep = True
+            reviver_persona = 1
+
         if efeito == "2" and not perdeu_vez:
             if loop_persona <= 1:
                 perdeu_vez = True
@@ -96,30 +113,31 @@ while op != "2" and op != "3":
                 print("Você ativou o efeito Tela Azul!")
                 tela_usada= True
                 turnos_ta = 2
-                if turnos_ta > 0:
-                    def_cpu = 0
-                    atq_p = random.randint(1, atq_persona)
-                    hp_cpu -= atq_p
-                    turnos_ta += 1
-                    print(f"Você atacou! Inimigo perdeu {atq_p} por conta do efeito Tela azul")
-                else:
-                    def_cpu = defc_original
+
             else:
                 if vez == "1":
                     atq_p = random.randint(1, atq_persona)
                     c_critico = random.randint(1,100)
-                    if c_critico <= 10:
-                        atq_p *= 2
-                        dano_critico = abs(atq_p - def_cpu)
-                        hp_cpu -= dano_critico
-                        print(f"Dano crítico! seu ataque aumentou em 50%! Inimigo perdeu {dano_critico} de hp")
+                    if turnos_ta > 0:
+                        def_cpu = 0
+                        hp_cpu -= atq_p
+                        turnos_ta -= 1
+                        print(f"Você atacou! Inimigo perdeu {atq_p} por conta do efeito Tela azul")
                     else:
-                        dano_ap= abs(atq_p - def_cpu)
-                        hp_cpu -= dano_ap
-                        print(f"Você atacou! Inimigo perdeu {dano_ap} de hp")
+                        if c_critico <= 10:
+                            atq_p *= 2
+                            dano_critico = abs(atq_p - def_cpu)
+                            hp_cpu -= dano_critico
+                            print(f"Dano crítico! seu ataque aumentou em 50%! Inimigo perdeu {dano_critico} de hp")
+                        else:
+                            dano_ap= abs(atq_p - def_cpu)
+                            hp_cpu -= dano_ap
+                            print(f"Você atacou! Inimigo perdeu {dano_ap} de hp")
                 else:
                     cura = random.randint(1,25)
                     hp_persona += cura
+                    if hp_persona > hp:
+                        hp_persona = hp
                     print(f"Você recuperou {cura} de hp")
 
     if perdeu_vez:
@@ -127,7 +145,14 @@ while op != "2" and op != "3":
         perdeu_vez = False
     else:
         efeito = random.choice(["1","2", "3"])
+        op_pocoes = random.choice(["1", "2", "3", "4"])
         acao_cpu = random.choice(["Atacar", "Curar"])
+
+        if op_pocoes == "1" and hp_cpu == 0:
+            ultima_chacec = True
+            reviver_cpu = 1
+            print("O inimigo ativou a última chance")
+
         if efeito == "2" and not persona_vez:
             if loop_cpu <= 1:
                 persona_vez = True
@@ -144,31 +169,32 @@ while op != "2" and op != "3":
                 print("O inimigo ativou o efeito Tela Azul!")
                 tela_azulc = True
                 turnos_tac = 2
-                if turnos_tac > 0:
-                    def_persona = 0
-                    atq_c = random.randint(1, atq_cpu)
-                    hp_persona -= atq_c
-                    turnos_tac -= 1
-                    print(f"Inimigo ataca! Você perdeu {atq_c} por conta do efeito Tela azul.")
-                else:
-                    def_persona = defp_original
             else:
                 if acao_cpu == "Atacar":
                     atq_c = random.randint(1, atq_cpu)
                     atq_critico = random.randint(1,100)
-                    if atq_critico <= 10:
-                        atq_c *= 2
-                        dano_critico2 = abs(atq_c - def_persona)
-                        hp_persona -= dano_critico2
-                        print(f"Dano crítico! o ataque do inimigo aumentou em 50%! Você perdeu {dano_critico2} de hp")
+                    if turnos_tac > 0:
+                        def_persona = 0
+                        hp_persona -= atq_c
+                        turnos_tac -= 1
+                        print(f"Inimigo ataca! Você perdeu {atq_c} por conta do efeito Tela azul.")
                     else:
-                        dano_ac = abs(atq_c - def_persona) #ABS vai transformar números negativos em positivos
-                        hp_persona -= dano_ac
-                        print(f"Inimigo ataca! Você perdeu {dano_ac:.2f} de hp ")
+                        if atq_critico <= 10:
+                            atq_c *= 2
+                            dano_critico2 = abs(atq_c - def_persona)
+                            hp_persona -= dano_critico2
+                            print(f"Dano crítico! o ataque do inimigo aumentou em 50%! Você perdeu {dano_critico2} de hp")
+                        else:
+                            dano_ac = abs(atq_c - def_persona) #ABS vai transformar números negativos em positivos
+                            hp_persona -= dano_ac
+                            print(f"Inimigo ataca! Você perdeu {dano_ac:.2f} de hp ")
                 else:
                     cura = random.randint(1,25)
                     hp_cpu += cura
+                    if hp_cpu > hp:
+                        hp_cpu = hp
                     print(f"Inimigo recuperou {cura} de vida! ")
+
     turno +=1
     if hp_persona < cache_hitp:
         if i <=0:
@@ -186,6 +212,15 @@ while op != "2" and op != "3":
                 hp_cpu += calculo_2
                 print(f"O oponente usou o Cache hit e recuperou {calculo_2:.2f} de vida")
             c +=1
+    if reviver_persona > 0:
+        hp_persona = hp * 0,25
+        reviver_persona -=1
+        print("Você reviveu! Agora tem mais uma chance para vencer o duelo.")
+    elif reviver_cpu > 0:
+        hp_cpu = hp * 0,25
+        reviver_cpu -=1
+        print("Você reviveu! Agora tem mais uma chance para vencer o duelo.")
+
     if hp_cpu < 0:
         print("\n==========================O duelo acabou! Você venceu!!==========================")
         break
@@ -199,6 +234,11 @@ while op != "2" and op != "3":
 #loop_infinito = Efeito: O alvo perde a vez por 1 turno enquanto "reinicia o sistema"  OKKKKKKKKKKKKKKKK
 #tela_Azul = Reduz a defesa para 0 por 2 turnos -  tá mec OKKKKKKKKKKKKKKKK??
 #cache_hit = Recupera 30% do HP máximo. Só pode ser usado quando HP está abaixo de 25%. OKKKKKKKKKKKKK
+#--------------------------------------------------------------------------Poções--------------------------------------------------------------------------
+#Poção da última chance: Ativa automaticamente ao morrer e restaura 25% da vida
+#Poção de fúria: aumenta o ataque em 30% em 3 turnos
+#Poção Soro do Berserker – Dobra o dano, mas reduz defesa pela metade.
+#Poção da Rocha – Aumenta a defesa em 50% por 2 turnos.
 
 #-------------------------------------------------------------------------- Multiplayer ---------------------------------------------------------------------
 
@@ -234,30 +274,30 @@ while op != "1" and op != "3":
                 print("Você ativou o efeito Tela Azul!")
                 tela_usada= True
                 turnos_ta = 2
-                if turnos_ta > 0:
-                    def_cpu = 0
-                    atq_p = random.randint(1, atq_persona)
-                    hp_cpu -= atq_p
-                    turnos_ta += 1
-                    print(f"Jogador 1 atacou! Jogador 2 perdeu {atq_p} por conta do efeito Tela azul")
-                else:
-                    def_cpu = defc_original
             else:
                 if vez == "1":
                     atq_p = random.randint(1, atq_persona)
                     c_critico = random.randint(1,100)
-                    if c_critico <= 10:
-                        atq_p *= 2
-                        dano_critico = abs(atq_p - def_cpu)
-                        hp_cpu -= dano_critico
-                        print(f"Dano crítico! o ataque do Jogador 1 aumentou em 50%! Jogador 2 perdeu {dano_critico} de hp")
+                    if turnos_ta > 0:
+                        def_cpu = 0
+                        hp_cpu -= atq_p
+                        turnos_ta -= 1
+                        print(f"Jogador 1 atacou! Jogador 2 perdeu {atq_p} por conta do efeito Tela azul")
                     else:
-                        dano_ap= abs(atq_p - def_cpu)
-                        hp_cpu -= dano_ap
-                        print(f"Jogador 1 atacou! Jogador 2 perdeu {dano_ap} de hp")
+                        if c_critico <= 10:
+                            atq_p *= 2
+                            dano_critico = abs(atq_p - def_cpu)
+                            hp_cpu -= dano_critico
+                            print(f"Dano crítico! o ataque do Jogador 1 aumentou em 50%! Jogador 2 perdeu {dano_critico} de hp")
+                        else:
+                            dano_ap= abs(atq_p - def_cpu)
+                            hp_cpu -= dano_ap
+                            print(f"Jogador 1 atacou! Jogador 2 perdeu {dano_ap} de hp")
                 else:
                     cura = random.randint(1,25)
                     hp_persona += cura
+                    if hp_persona > hp:
+                        hp_persona = hp
                     print(f"Jogador 1 recuperou {cura} de hp")
 
     if perdeu_vez:
@@ -289,30 +329,30 @@ while op != "1" and op != "3":
                 print("Jogador 2 ativou o efeito Tela Azul!")
                 tela_azulc = True
                 turnos_tac = 2
-                if turnos_tac > 0:
-                    def_persona = 0
-                    atq_c = random.randint(1, atq_cpu)
-                    hp_persona -= atq_c
-                    turnos_tac -= 1
-                    print(f"Jogador 2 ataca! Jogador 1 perdeu {atq_c} por conta do efeito Tela azul.")
-                else:
-                    def_persona = defp_original
             else:
                 if acao_cpu == "Atacar":
                     atq_c = random.randint(1, atq_cpu)
                     atq_critico = random.randint(1,100)
-                    if atq_critico <= 10:
-                        atq_c *= 2
-                        dano_critico2 = abs(atq_c - def_persona)
-                        hp_persona -= dano_critico2
-                        print(f"Dano crítico! o ataque do Jogador 2 aumentou em 50%! Você perdeu {dano_critico2} de hp")
+                    if turnos_tac > 0:
+                        def_persona = 0
+                        hp_persona -= atq_c
+                        turnos_tac -= 1
+                        print(f"Jogador 2 ataca! Jogador 1 perdeu {atq_c} por conta do efeito Tela azul.")
                     else:
-                        dano_ac = abs(atq_c - def_persona) #ABS vai transformar números negativos em positivos
-                        hp_persona -= dano_ac
-                        print(f"Jogador 2 ataca! Jogador 1 perdeu {dano_ac:.2f} de hp ")
+                        if atq_critico <= 10:
+                            atq_c *= 2
+                            dano_critico2 = abs(atq_c - def_persona)
+                            hp_persona -= dano_critico2
+                            print(f"Dano crítico! o ataque do Jogador 2 aumentou em 50%! Você perdeu {dano_critico2} de hp")
+                        else:
+                            dano_ac = abs(atq_c - def_persona) #ABS vai transformar números negativos em positivos
+                            hp_persona -= dano_ac
+                            print(f"Jogador 2 ataca! Jogador 1 perdeu {dano_ac:.2f} de hp ")
                 else:
                     cura = random.randint(1,25)
                     hp_cpu += cura
+                    if hp_cpu > hp:
+                        hp_cpu = hp
                     print(f"Jogador 2 recuperou {cura} de vida! ")
     turno +=1
     if hp_persona < cache_hitp:

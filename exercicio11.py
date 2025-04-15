@@ -42,6 +42,8 @@ while op != "2":
     else:
         cura = random.randint(1,25)
         hp_persona += cura
+        if hp_persona > hp:
+            hp_persona = hp
         print(f"Você recuperou {cura} de hp")
 
     acao_cpu = random.choice(["Atacar", "Curar"])
@@ -53,7 +55,10 @@ while op != "2":
     else:
         cura = random.randint(1,25)
         hp_cpu += cura
+        if hp_cpu > hp:
+            hp_cpu = hp
         print(f"Inimigo recuperou {cura} de vida! ")
+
     turno +=1
     if hp_cpu < 0:
         print("\n==========================O duelo acabou! Você venceu!!==========================")
