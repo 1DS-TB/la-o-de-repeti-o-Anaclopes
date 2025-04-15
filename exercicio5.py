@@ -10,4 +10,4 @@ if divisor == 2:
 elif divisor <1:
     print("INVALIDO")
 else:
-    print(f"{num} não é primo")
+    print(f"{num} nao eh primo")
